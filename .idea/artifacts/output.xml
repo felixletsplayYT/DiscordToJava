@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="output">
+    <output-path>B:/</output-path>
+    <root id="archive" name="DiscordToJava.jar">
+      <element id="module-output" name="DiscordToJava" />
+      <element id="extracted-dir" path="B:/Discord4j-2.7.0-shaded.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

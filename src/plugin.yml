@@ -1,4 +1,4 @@
 name: MinecraftToDiscord
 version: 1.0
 
-main: de.felix.minecraft.discord.main
+main: de.felix.minecraft.discord.main.DiscordMain
