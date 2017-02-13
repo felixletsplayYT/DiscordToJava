@@ -18,6 +18,9 @@ import javax.swing.*;
  */
 public class DiscordMain extends JavaPlugin {
     public static IChannel channel;
+    private String token;
+    private String guildid;
+    private String channelid;
 
     public static void main(String[] args) {
         JOptionPane.showMessageDialog(null, "Only useful as plugin on spigot/bukkit Server");
@@ -26,13 +29,14 @@ public class DiscordMain extends JavaPlugin {
     public static IDiscordClient client;
 
     public void onEnable() {
-        client = createClient("", true);
+        readConfig();
+        client = createClient(token, true);
         this.getServer().getPluginManager().registerEvents(new Event(), this);
         this.getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
             @Override
             public void run() {
                 System.out.println("Connect to Channel");
-                channel = client.getGuildByID("278144433369645056").getChannelByID("279681247746457600");
+                channel = client.getGuildByID(guildid).getChannelByID(channelid);
                 try {
                     channel.sendMessage("Server started!(You can join now)");
                 } catch (MissingPermissionsException e) {
@@ -83,5 +87,15 @@ public class DiscordMain extends JavaPlugin {
         }
         if (channel == null) this.getServer().getPluginManager().disablePlugin(this);
     }
+    private void readConfig(){
+        this.getConfig().addDefault("config.connect.id", "Long ID");
+        this.getConfig().addDefault("config.connect.Serverid", "Long ID");
+        this.getConfig().addDefault("config.connect.channelid", "Long ID");
+        this.getConfig().options().copyDefaults(true);
+        this.saveConfig();
+        token = getConfig().getString("config.connect.id");
+        guildid = getConfig().getString("config.connect.Serverid");
+        channelid = getConfig().getString("config.connect.channelid");
 
+    }
 }
