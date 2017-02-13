@@ -4,6 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.Status;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
@@ -41,6 +42,7 @@ public class DiscordMain extends JavaPlugin {
                 } catch (DiscordException e) {
                     e.printStackTrace();
                 }
+                client.getDispatcher().registerListener(new DiscordListener());
             }
         }, 100);
 
@@ -81,6 +83,5 @@ public class DiscordMain extends JavaPlugin {
         }
         if (channel == null) this.getServer().getPluginManager().disablePlugin(this);
     }
-
 
 }
