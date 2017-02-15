@@ -1,26 +1,35 @@
 package de.felix.minecraft.discord.main;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.Status;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Main Plugin
  * Created by felix on 10.02.2017.
  */
 public class DiscordMain extends JavaPlugin {
+    public static ArrayList<IUser> verify;
     public static IChannel channel;
-    private String token;
-    private String guildid;
-    private String channelid;
+    public static IChannel channeladmin;
+    public static String token;
+    public static String guildid;
+    public static String channelid;
+    public static String channelidadmin;
 
     public static void main(String[] args) {
         JOptionPane.showMessageDialog(null, "Only useful as plugin on spigot/bukkit Server");
@@ -29,26 +38,13 @@ public class DiscordMain extends JavaPlugin {
     public static IDiscordClient client;
 
     public void onEnable() {
+        verify = new ArrayList<>();
         readConfig();
         client = createClient(token, true);
         this.getServer().getPluginManager().registerEvents(new Event(), this);
-        this.getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Connect to Channel");
-                channel = client.getGuildByID(guildid).getChannelByID(channelid);
-                try {
-                    channel.sendMessage("Server started!(You can join now)");
-                } catch (MissingPermissionsException e) {
-                    e.printStackTrace();
-                } catch (RateLimitException e) {
-                    e.printStackTrace();
-                } catch (DiscordException e) {
-                    e.printStackTrace();
-                }
-                client.getDispatcher().registerListener(new DiscordListener());
-            }
-        }, 100);
+        client.getDispatcher().registerListener(new DiscordListener());
+
+
 
 
     }
@@ -91,11 +87,35 @@ public class DiscordMain extends JavaPlugin {
         this.getConfig().addDefault("config.connect.id", "Long ID");
         this.getConfig().addDefault("config.connect.Serverid", "Long ID");
         this.getConfig().addDefault("config.connect.channelid", "Long ID");
+        this.getConfig().addDefault("config.connect.channelidadmin", "Long ID");
         this.getConfig().options().copyDefaults(true);
         this.saveConfig();
         token = getConfig().getString("config.connect.id");
         guildid = getConfig().getString("config.connect.Serverid");
         channelid = getConfig().getString("config.connect.channelid");
+        channelidadmin = getConfig().getString("config.connect.channelidadmin");
+    }
 
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        Player p;
+        if (sender instanceof Player){
+            p = (Player)sender;
+            return false;
+        }
+        if (command.getLabel().equalsIgnoreCase("verify")){
+            int random;
+            verify.add(client.getGuildByID(guildid).getUsersByName(args[0]).get(0));
+            try {
+                client.getGuildByID(guildid).getUsersByName(args[0]).get(0).getOrCreatePMChannel().sendMessage("Answer to verify!");
+            } catch (MissingPermissionsException e) {
+                e.printStackTrace();
+            } catch (RateLimitException e) {
+                e.printStackTrace();
+            } catch (DiscordException e) {
+                e.printStackTrace();
+            }
+        }
+        return  true;
     }
 }

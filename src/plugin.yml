@@ -2,3 +2,7 @@ name: MinecraftToDiscord
 version: 1.0
 
 main: de.felix.minecraft.discord.main.DiscordMain
+
+commands:
+  verify:
+    description: Verify Discord
