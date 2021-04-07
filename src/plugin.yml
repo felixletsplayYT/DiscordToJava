@@ -1,7 +1,7 @@
 name: MinecraftToDiscord
 version: 1.0
 
-main: de.felix.minecraft.discord.main.DiscordMain
+main: de.strifel.minecraftplugins.DiscordToMinecraft.DiscordMain
 
 commands:
   verify:
